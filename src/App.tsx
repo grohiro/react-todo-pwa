@@ -1,35 +1,113 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from 'react';
 
-function App() {
-  const [count, setCount] = useState(0)
-
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Todo App</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+type Todo = {
+  value: string;
+  readonly id: number;
+  checked: boolean;
+  removed: boolean;
 }
 
-export default App
+export const App = () => {
+
+  const [text, setText] = useState('');
+
+  const [todos, setTodos] = useState<Todo[]>([]);
+
+  const handleSubmit = () => {
+    if (!text) return;
+
+    const newTodo: Todo = {
+      value: text,
+      id: new Date().getTime(),
+      checked: false,
+      removed: false,
+    };
+
+    setTodos((todos) => [...todos, newTodo]);
+
+    setText('');
+  }
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setText(e.target.value);
+  }
+
+  const handleEdit = (id: number, e: React.ChangeEvent<HTMLInputElement>) => {
+    setTodos((todos) => {
+      const newTodos = todos.map((todo) => {
+        if (todo.id !== id) {
+          return todo;
+        }
+
+        return { ...todo, value: e.target.value };
+      });
+
+      return newTodos;
+    });
+  }
+
+  const handleCheck = (id: number, checked: boolean) => {
+    setTodos((todos) => {
+      const newTodos = todos.map((todo) => {
+        if (todo.id !== id) {
+          return todo;
+        }
+
+        return { ...todo, checked, };
+      });
+
+      return newTodos;
+    });
+  }
+
+  const handleRemove = (id: number, removed: boolean) => {
+    setTodos((todos) => {
+      const newTodos = todos.map((todo) => {
+        if (todo.id !== id) {
+          return todo;
+        }
+
+        return { ...todo, removed, };
+      });
+
+      return newTodos;
+    });
+  }
+
+  return (
+    <div>
+      <form onSubmit={(e) => {
+        e.preventDefault()
+        handleSubmit();
+      }}>
+        <input type="text" value={text} onChange={(e) => handleChange(e)} />
+        <input
+          type="submit"
+          value="追加"
+          onSubmit={handleSubmit}
+        />
+      </form>
+
+      <ul>
+        {todos.map((todo) => {
+          return (<li key={todo.id}>
+            <input
+              type="checkbox"
+              checked={todo.checked}
+              disabled={todo.removed}
+              onChange={() => handleCheck(todo.id, !todo.checked)}
+            />
+            <input type="text" disabled={todo.checked || todo.removed} value={todo.value} onChange={(e) => handleEdit(todo.id, e)} />
+            <button
+              onClick={() => handleRemove(todo.id, !todo.removed)}>
+              {todo.removed ? "復元" : "削除"}
+            </button>
+          </li>)
+        })}
+      </ul>
+
+      <p>{text}</p>
+
+    </div>
+  );
+};
