@@ -1,21 +1,20 @@
-import { useState } from 'react';
+import { useState } from "react";
 
 type Todo = {
   value: string;
   readonly id: number;
   checked: boolean;
   removed: boolean;
-}
+};
 
-type Filter = 'all' | 'checked' | 'unchecked' | 'removed'
+type Filter = "all" | "checked" | "unchecked" | "removed";
 
 export const App = () => {
-
-  const [text, setText] = useState('');
+  const [text, setText] = useState("");
 
   const [todos, setTodos] = useState<Todo[]>([]);
 
-  const [filter, setFilter] = useState<Filter>('all')
+  const [filter, setFilter] = useState<Filter>("all");
 
   const handleSubmit = () => {
     if (!text) return;
@@ -29,12 +28,12 @@ export const App = () => {
 
     setTodos((todos) => [...todos, newTodo]);
 
-    setText('');
-  }
+    setText("");
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setText(e.target.value);
-  }
+  };
 
   const handleEdit = (id: number, e: React.ChangeEvent<HTMLInputElement>) => {
     setTodos((todos) => {
@@ -48,7 +47,7 @@ export const App = () => {
 
       return newTodos;
     });
-  }
+  };
 
   const handleCheck = (id: number, checked: boolean) => {
     setTodos((todos) => {
@@ -57,12 +56,12 @@ export const App = () => {
           return todo;
         }
 
-        return { ...todo, checked, };
+        return { ...todo, checked };
       });
 
       return newTodos;
     });
-  }
+  };
 
   const handleRemove = (id: number, removed: boolean) => {
     setTodos((todos) => {
@@ -71,78 +70,96 @@ export const App = () => {
           return todo;
         }
 
-        return { ...todo, removed, };
+        return { ...todo, removed };
       });
 
       return newTodos;
     });
-  }
+  };
 
   const handleSort = (filter: Filter) => {
     setFilter(filter);
+  };
 
+  const handleEmpty = () => {
+    setTodos((todos) => {
+      return todos.filter((todo) => !todo.removed);
+    });
+  };
 
-  }
-
-  const filteredTodos = todos.filter(todo => {
+  const filteredTodos = todos.filter((todo) => {
     switch (filter) {
-      case 'all':
+      case "all":
         return !todo.removed;
-      case 'checked':
-        return todo.checked;
-      case 'unchecked':
+      case "checked":
+        return todo.checked && !todo.removed;
+      case "unchecked":
         return !todo.checked;
-      case 'removed':
+      case "removed":
         return todo.removed;
       default:
         return todo;
     }
-  })
+  });
 
   return (
     <div>
-      <select defaultValue="all" onChange={(e) => handleSort(e.target.value as Filter)}>
+      <select
+        defaultValue="all"
+        onChange={(e) => handleSort(e.target.value as Filter)}
+      >
         <option value="all">すべてのタスク</option>
         <option value="checked">完了したタスク</option>
         <option value="unchecked">現在のタスク</option>
         <option value="removed">ごみ箱</option>
       </select>
 
-      <form onSubmit={(e) => {
-        e.preventDefault()
-        handleSubmit();
-      }}>
-        <input type="text" value={text} onChange={(e) => handleChange(e)}
-          disabled={filter === 'checked' || filter === 'removed'}
-        />
-        <input
-          type="submit"
-          value="追加"
-          onSubmit={handleSubmit}
-          disabled={filter === 'checked' || filter === 'removed'}
-        />
-      </form>
+      {filter === "removed" ? (
+        <button
+          onClick={() => handleEmpty()}
+          disabled={filteredTodos.length === 0}
+        >
+          ごみ箱を空にする
+        </button>
+      ) : (
+        filter !== "checked" && (
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleSubmit();
+            }}
+          >
+            <input type="text" value={text} onChange={(e) => handleChange(e)} />
+            <input type="submit" value="追加" onSubmit={handleSubmit} />
+          </form>
+        )
+      )}
 
       <ul>
         {filteredTodos.map((todo) => {
-          return (<li key={todo.id}>
-            <input
-              type="checkbox"
-              checked={todo.checked}
-              disabled={todo.removed}
-              onChange={() => handleCheck(todo.id, !todo.checked)}
-            />
-            <input type="text" disabled={todo.checked || todo.removed} value={todo.value} onChange={(e) => handleEdit(todo.id, e)} />
-            <button
-              onClick={() => handleRemove(todo.id, !todo.removed)}>
-              {todo.removed ? "復元" : "削除"}
-             </button>
-          </li>)
+          return (
+            <li key={todo.id}>
+              <input
+                type="checkbox"
+                checked={todo.checked}
+                disabled={todo.removed}
+                onChange={() => handleCheck(todo.id, !todo.checked)}
+              />
+              <input
+                type="text"
+                disabled={todo.checked || todo.removed}
+                value={todo.value}
+                onChange={(e) => handleEdit(todo.id, e)}
+              />
+              <button onClick={() => handleRemove(todo.id, !todo.removed)}>
+                {todo.removed ? "復元" : "削除"}
+              </button>
+            </li>
+          );
         })}
       </ul>
 
       <p>{text}</p>
-
     </div>
   );
 };
