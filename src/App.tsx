@@ -7,11 +7,15 @@ type Todo = {
   removed: boolean;
 }
 
+type Filter = 'all' | 'checked' | 'unchecked' | 'removed'
+
 export const App = () => {
 
   const [text, setText] = useState('');
 
   const [todos, setTodos] = useState<Todo[]>([]);
+
+  const [filter, setFilter] = useState<Filter>('all')
 
   const handleSubmit = () => {
     if (!text) return;
@@ -74,22 +78,53 @@ export const App = () => {
     });
   }
 
+  const handleSort = (filter: Filter) => {
+    setFilter(filter);
+
+
+  }
+
+  const filteredTodos = todos.filter(todo => {
+    switch (filter) {
+      case 'all':
+        return !todo.removed;
+      case 'checked':
+        return todo.checked;
+      case 'unchecked':
+        return !todo.checked;
+      case 'removed':
+        return todo.removed;
+      default:
+        return todo;
+    }
+  })
+
   return (
     <div>
+      <select defaultValue="all" onChange={(e) => handleSort(e.target.value as Filter)}>
+        <option value="all">すべてのタスク</option>
+        <option value="checked">完了したタスク</option>
+        <option value="unchecked">現在のタスク</option>
+        <option value="removed">ごみ箱</option>
+      </select>
+
       <form onSubmit={(e) => {
         e.preventDefault()
         handleSubmit();
       }}>
-        <input type="text" value={text} onChange={(e) => handleChange(e)} />
+        <input type="text" value={text} onChange={(e) => handleChange(e)}
+          disabled={filter === 'checked' || filter === 'removed'}
+        />
         <input
           type="submit"
           value="追加"
           onSubmit={handleSubmit}
+          disabled={filter === 'checked' || filter === 'removed'}
         />
       </form>
 
       <ul>
-        {todos.map((todo) => {
+        {filteredTodos.map((todo) => {
           return (<li key={todo.id}>
             <input
               type="checkbox"
@@ -101,7 +136,7 @@ export const App = () => {
             <button
               onClick={() => handleRemove(todo.id, !todo.removed)}>
               {todo.removed ? "復元" : "削除"}
-            </button>
+             </button>
           </li>)
         })}
       </ul>
