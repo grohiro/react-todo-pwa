@@ -1,13 +1,5 @@
 import { useState } from "react";
-
-type Todo = {
-  value: string;
-  readonly id: number;
-  checked: boolean;
-  removed: boolean;
-};
-
-type Filter = "all" | "checked" | "unchecked" | "removed";
+import { Filter, Todo } from "./@types/Todo";
 
 export const App = () => {
   const [text, setText] = useState("");
