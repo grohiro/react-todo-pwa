@@ -35,46 +35,14 @@ export const App = () => {
     setText(e.target.value);
   };
 
-  const handleEdit = (id: number, e: React.ChangeEvent<HTMLInputElement>) => {
-    setTodos((todos) => {
-      const newTodos = todos.map((todo) => {
-        if (todo.id !== id) {
-          return todo;
-        }
-
-        return { ...todo, value: e.target.value };
-      });
-
-      return newTodos;
-    });
-  };
-
-  const handleCheck = (id: number, checked: boolean) => {
-    setTodos((todos) => {
-      const newTodos = todos.map((todo) => {
-        if (todo.id !== id) {
-          return todo;
-        }
-
-        return { ...todo, checked };
-      });
-
-      return newTodos;
-    });
-  };
-
-  const handleRemove = (id: number, removed: boolean) => {
-    setTodos((todos) => {
-      const newTodos = todos.map((todo) => {
-        if (todo.id !== id) {
-          return todo;
-        }
-
-        return { ...todo, removed };
-      });
-
-      return newTodos;
-    });
+  const handleTodo = <K extends keyof Todo, V extends Todo[K]>(
+    id: number,
+    key: K,
+    value: V
+  ) => {
+    setTodos((todos) =>
+      todos.map((todo) => (todo.id === id ? { ...todo, [key]: value } : todo))
+    );
   };
 
   const handleSort = (filter: Filter) => {
@@ -143,15 +111,17 @@ export const App = () => {
                 type="checkbox"
                 checked={todo.checked}
                 disabled={todo.removed}
-                onChange={() => handleCheck(todo.id, !todo.checked)}
+                onChange={() => handleTodo(todo.id, "checked", !todo.checked)}
               />
               <input
                 type="text"
                 disabled={todo.checked || todo.removed}
                 value={todo.value}
-                onChange={(e) => handleEdit(todo.id, e)}
+                onChange={(e) => handleTodo(todo.id, "value", e.target.value)}
               />
-              <button onClick={() => handleRemove(todo.id, !todo.removed)}>
+              <button
+                onClick={() => handleTodo(todo.id, "removed", !todo.removed)}
+              >
                 {todo.removed ? "復元" : "削除"}
               </button>
             </li>
