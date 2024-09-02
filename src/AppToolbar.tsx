@@ -8,6 +8,7 @@ import { Filter } from "./@types/Todo";
 
 type Props = {
   filter: Filter;
+  onToggleDrawer: () => void;
 }
 
 const translator = (arg: Filter) => {
@@ -37,6 +38,7 @@ export const AppToolbar = (props: Props) => {
               edge="start"
               color="inherit"
               sx={{ mr: 2 }}
+              onClick={props.onToggleDrawer}
             >
               <Icon>menu</Icon>
             </IconButton>

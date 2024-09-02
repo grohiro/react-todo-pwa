@@ -25,10 +25,13 @@ const theme = createTheme({
 
 export const App = () => {
   const [text, setText] = useState("");
-
   const [todos, setTodos] = useState<Todo[]>([]);
-
   const [filter, setFilter] = useState<Filter>("all");
+  const [drawerOpen, setDrawerOpen] = useState(false);
+
+  const handleToggleDrawer = () => {
+    setDrawerOpen((b) => !b);
+  };
 
   const handleSubmit = () => {
     if (!text) return;
@@ -41,7 +44,6 @@ export const App = () => {
     };
 
     setTodos((todos) => [...todos, newTodo]);
-
     setText("");
   };
 
@@ -72,8 +74,8 @@ export const App = () => {
   return (
     <ThemeProvider theme={theme}>
       <GlobalStyles styles={{ body: { margin: 0, padding: 0 } }} />
-      <AppToolbar filter={filter} />
-      <SideBar onSort={handleSort} />
+      <AppToolbar filter={filter} onToggleDrawer={handleToggleDrawer} />
+      <SideBar onSort={handleSort} drawerOpen={drawerOpen} onToggleDrawer={handleToggleDrawer} />
       <FormDialog text={text} onChange={handleChange} onSubmit={handleSubmit} />
 
       <TodoItem filter={filter} todos={todos} onTodo={handleTodo} />
