@@ -1,9 +1,27 @@
+import { createTheme, GlobalStyles, ThemeProvider } from "@mui/material";
 import { useState } from "react";
 import { Filter, Todo } from "./@types/Todo";
 import { FormDialog } from "./FormDialog";
 import { ActionButton } from "./ActionButton";
 import { SideBar } from "./SideBar";
 import { TodoItem } from "./TodoItem";
+import { AppToolbar } from "./AppToolbar";
+import { indigo, pink } from "@mui/material/colors";
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: indigo[500],
+      light: '#757de8',
+      dark: '#002984',
+    },
+    secondary: {
+      main: pink[500],
+      light: '#ff6090',
+      dark: '#b0003a',
+    },
+  }
+});
 
 export const App = () => {
   const [text, setText] = useState("");
@@ -52,7 +70,9 @@ export const App = () => {
   };
 
   return (
-    <div>
+    <ThemeProvider theme={theme}>
+      <GlobalStyles styles={{ body: { margin: 0, padding: 0 } }} />
+      <AppToolbar filter={filter} />
       <SideBar onSort={handleSort} />
       <FormDialog text={text} onChange={handleChange} onSubmit={handleSubmit} />
 
@@ -60,6 +80,6 @@ export const App = () => {
       <ActionButton onEmpty={handleEmpty} todos={todos} />
 
       <p>{text}</p>
-    </div>
+    </ThemeProvider>
   );
 };
