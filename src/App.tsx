@@ -7,6 +7,7 @@ import { SideBar } from "./SideBar";
 import { TodoItem } from "./TodoItem";
 import { AppToolbar } from "./AppToolbar";
 import { indigo, pink } from "@mui/material/colors";
+import { QR } from "./QR";
 
 const theme = createTheme({
   palette: {
@@ -28,6 +29,11 @@ export const App = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [filter, setFilter] = useState<Filter>("all");
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [qrOpen, setQrOpen] = useState(false);
+
+  const handleToggleQr = () => {
+    setQrOpen(b => !b);
+  };
 
   const handleToggleDrawer = () => {
     setDrawerOpen((b) => !b);
@@ -75,13 +81,12 @@ export const App = () => {
     <ThemeProvider theme={theme}>
       <GlobalStyles styles={{ body: { margin: 0, padding: 0 } }} />
       <AppToolbar filter={filter} onToggleDrawer={handleToggleDrawer} />
-      <SideBar onSort={handleSort} drawerOpen={drawerOpen} onToggleDrawer={handleToggleDrawer} />
+      <SideBar onSort={handleSort} drawerOpen={drawerOpen} onToggleDrawer={handleToggleDrawer} onToggleQR={handleToggleQr} />
       <FormDialog text={text} onChange={handleChange} onSubmit={handleSubmit} />
 
       <TodoItem filter={filter} todos={todos} onTodo={handleTodo} />
       <ActionButton onEmpty={handleEmpty} todos={todos} />
-
-      <p>{text}</p>
+      <QR open={qrOpen} onClose={handleToggleQr} />
     </ThemeProvider>
   );
 };

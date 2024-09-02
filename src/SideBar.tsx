@@ -7,6 +7,7 @@ import pjson from '../package.json';
 type Props = {
   drawerOpen: boolean;
   onToggleDrawer: () => void;
+  onToggleQR: () => void;
   onSort: (filter: Filter) => void;
 };
 
@@ -77,6 +78,14 @@ export const SideBar = (props: Props) => {
             </ListItemButton>
           </ListItem>
           <Divider />
+          <ListItem disablePadding>
+            <ListItemButton onClick={props.onToggleQR}>
+              <ListItemIcon>
+                <Icon>share</Icon>
+              </ListItemIcon>
+              <ListItemText secondary="このアプリを共有" />
+            </ListItemButton>
+          </ListItem>
         </List>
       </DrawerList>
     </Drawer>
