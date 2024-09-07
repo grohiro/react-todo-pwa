@@ -8,6 +8,7 @@ import { TodoItem } from "./TodoItem";
 import { AppToolbar } from "./AppToolbar";
 import { indigo, pink } from "@mui/material/colors";
 import { QR } from "./QR";
+import { AlertDialog } from "./AlertDialog";
 
 const theme = createTheme({
   palette: {
@@ -38,6 +39,7 @@ export const App = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [qrOpen, setQrOpen] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [alertOpen, setAlertOpen] = useState(true);
 
   const handleToggleQr = () => {
     setQrOpen(b => !b);
@@ -94,6 +96,13 @@ export const App = () => {
     });
   };
 
+  const handleAlert = (b: boolean) => {
+    if (b) {
+      handleEmpty();
+    }
+    setAlertOpen(b => !b);
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <GlobalStyles styles={{ body: { margin: 0, padding: 0 } }} />
@@ -102,8 +111,10 @@ export const App = () => {
       <FormDialog dialogOpen={dialogOpen} text={text} onChange={handleChange} onSubmit={handleSubmit} />
 
       <TodoItem filter={filter} todos={todos} onTodo={handleTodo} />
-      <ActionButton onEmpty={handleEmpty} todos={todos} onClickAdd={handleToggleFormDialog} />
+      <ActionButton onEmpty={() => setAlertOpen(true)} todos={todos} onClickAdd={handleToggleFormDialog} filter={filter} />
       <QR open={qrOpen} onClose={handleToggleQr} />
+      <AlertDialog open={alertOpen} onClose={handleAlert} />
+
     </ThemeProvider>
   );
 };
