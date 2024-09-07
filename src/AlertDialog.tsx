@@ -11,7 +11,7 @@ export interface AlertDialogProps {
 
 export function AlertDialog(props: AlertDialogProps) {
   return (
-    <Dialog open={props.open}>
+    <Dialog open={props.open} sx={{ fontFamily: '-apple-system, BlinkMacSystemFont, Roboto, sans-serif' }}>
       <DialogTitle>
         アラート
       </DialogTitle>
