@@ -131,10 +131,11 @@ export const TodoItem = (props: Props) => {
                   </Button>
                   <Trash
                     onClick={() => props.onTodo(todo.id, 'removed', !todo.removed)}
+                    disabled={!todo.checked}
                   >
                     {todo.removed
                       ? (<Icon>undo</Icon>)
-                      : (<Icon style={{ color: grey[500] }}>delete</Icon>)
+                      : (<Icon style={{ color: todo.checked ? grey[500] : grey[200] }}>delete</Icon>)
                     }
                   </Trash>
                 </ButtonContainer>
