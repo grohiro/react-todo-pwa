@@ -108,10 +108,10 @@ export const App = () => {
       <GlobalStyles styles={{ body: { margin: 0, padding: 0 } }} />
       <AppToolbar filter={filter} onToggleDrawer={handleToggleDrawer} />
       <SideBar onSort={handleSort} drawerOpen={drawerOpen} onToggleDrawer={handleToggleDrawer} onToggleQR={handleToggleQr} />
-      <FormDialog dialogOpen={dialogOpen} text={text} onChange={handleChange} onSubmit={handleSubmit} />
+      <FormDialog dialogOpen={dialogOpen} text={text} onChange={handleChange} onSubmit={handleSubmit} onToggleDialog={handleToggleFormDialog} />
 
       <TodoItem filter={filter} todos={todos} onTodo={handleTodo} />
-      <ActionButton onEmpty={() => setAlertOpen(true)} todos={todos} onClickAdd={handleToggleFormDialog} filter={filter} />
+      <ActionButton onEmpty={() => setAlertOpen(true)} todos={todos} onToggleDialog={handleToggleFormDialog} filter={filter} />
       <QR open={qrOpen} onClose={handleToggleQr} />
       <AlertDialog open={alertOpen} onClose={handleAlert} />
 

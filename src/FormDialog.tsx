@@ -3,6 +3,7 @@ import { Button, Dialog, DialogActions, DialogContent, TextField } from "@mui/ma
 type Props = {
   onSubmit: () => void;
   onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  onToggleDialog: () => void;
   text: string;
   dialogOpen: boolean;
 };
@@ -17,6 +18,7 @@ export const FormDialog = (props: Props) => {
     >
       <Dialog open={props.dialogOpen}
         fullWidth={true}
+        onClose={props.onToggleDialog}
       >
         <DialogContent>
           <TextField
