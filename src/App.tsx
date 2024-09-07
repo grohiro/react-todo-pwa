@@ -26,13 +26,26 @@ const theme = createTheme({
 
 export const App = () => {
   const [text, setText] = useState("");
-  const [todos, setTodos] = useState<Todo[]>([]);
+  const [todos, setTodos] = useState<Todo[]>([
+    {
+      id: 1,
+      value: "TODO #1",
+      checked: false,
+      removed: false,
+    }
+  ]);
   const [filter, setFilter] = useState<Filter>("all");
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [qrOpen, setQrOpen] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   const handleToggleQr = () => {
     setQrOpen(b => !b);
+  };
+
+  const handleToggleFormDialog = () => {
+    setDialogOpen(b => !b);
+    setText('');
   };
 
   const handleToggleDrawer = () => {
@@ -40,7 +53,10 @@ export const App = () => {
   };
 
   const handleSubmit = () => {
-    if (!text) return;
+    if (!text) {
+      setDialogOpen(b => !b);
+      return;
+    }
 
     const newTodo: Todo = {
       value: text,
@@ -51,9 +67,10 @@ export const App = () => {
 
     setTodos((todos) => [...todos, newTodo]);
     setText("");
+    setDialogOpen(b => !b);
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setText(e.target.value);
   };
 
@@ -82,10 +99,10 @@ export const App = () => {
       <GlobalStyles styles={{ body: { margin: 0, padding: 0 } }} />
       <AppToolbar filter={filter} onToggleDrawer={handleToggleDrawer} />
       <SideBar onSort={handleSort} drawerOpen={drawerOpen} onToggleDrawer={handleToggleDrawer} onToggleQR={handleToggleQr} />
-      <FormDialog text={text} onChange={handleChange} onSubmit={handleSubmit} />
+      <FormDialog dialogOpen={dialogOpen} text={text} onChange={handleChange} onSubmit={handleSubmit} />
 
       <TodoItem filter={filter} todos={todos} onTodo={handleTodo} />
-      <ActionButton onEmpty={handleEmpty} todos={todos} />
+      <ActionButton onEmpty={handleEmpty} todos={todos} onClickAdd={handleToggleFormDialog} />
       <QR open={qrOpen} onClose={handleToggleQr} />
     </ThemeProvider>
   );
