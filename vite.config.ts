@@ -60,6 +60,7 @@ export default defineConfig({
           purpose: 'maskable',
         },
       ],
+      lang: "ja",
     },
   })],
 })
