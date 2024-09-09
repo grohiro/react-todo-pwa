@@ -10,6 +10,7 @@ import { indigo, pink } from "@mui/material/colors";
 import { QR } from "./QR";
 import { AlertDialog } from "./AlertDialog";
 import localforage from "localforage";
+import { isTodos } from "./lib/isTodo";
 
 const theme = createTheme({
   palette: {
@@ -106,7 +107,7 @@ export const App = () => {
 
   useEffect(() => {
     localforage.getItem('todo-20240909')
-      .then((values) => setTodos(values as Todo[]));
+      .then((values) => isTodos(values) && setTodos(values as Todo[]));
   }, [])
 
   useEffect(() => {
