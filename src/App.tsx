@@ -1,5 +1,5 @@
 import { createTheme, GlobalStyles, ThemeProvider } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Filter, Todo } from "./@types/Todo";
 import { FormDialog } from "./FormDialog";
 import { ActionButton } from "./ActionButton";
@@ -9,6 +9,7 @@ import { AppToolbar } from "./AppToolbar";
 import { indigo, pink } from "@mui/material/colors";
 import { QR } from "./QR";
 import { AlertDialog } from "./AlertDialog";
+import localforage from "localforage";
 
 const theme = createTheme({
   palette: {
@@ -39,7 +40,7 @@ export const App = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [qrOpen, setQrOpen] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [alertOpen, setAlertOpen] = useState(true);
+  const [alertOpen, setAlertOpen] = useState(false);
 
   const handleToggleQr = () => {
     setQrOpen(b => !b);
@@ -102,6 +103,15 @@ export const App = () => {
     }
     setAlertOpen(b => !b);
   };
+
+  useEffect(() => {
+    localforage.getItem('todo-20240909')
+      .then((values) => setTodos(values as Todo[]));
+  }, [])
+
+  useEffect(() => {
+    localforage.setItem('todo-20240909', todos);
+  }, [todos]);
 
   return (
     <ThemeProvider theme={theme}>

@@ -81,9 +81,9 @@ export const TodoItem = (props: Props) => {
     <>
       {filteredTodos.map((todo) => {
         return (
-          <Container>
+          <Container key={todo.id}>
             <Form>
-              <TodoCard key={todo.id}>
+              <TodoCard>
                 <TextField
                   fullWidth
                   disabled={todo.checked || todo.removed}
