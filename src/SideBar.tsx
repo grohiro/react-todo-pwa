@@ -1,4 +1,4 @@
-import { Avatar, Box, Divider, Drawer, Icon, List, ListItem, ListItemButton, ListItemIcon, ListItemText, styled, Typography } from "@mui/material";
+import { Avatar, Divider, Drawer, Icon, List, ListItem, ListItemButton, ListItemIcon, ListItemText, styled } from "@mui/material";
 import { Filter } from "./@types/Todo";
 import { indigo, lightBlue, pink } from "@mui/material/colors";
 
